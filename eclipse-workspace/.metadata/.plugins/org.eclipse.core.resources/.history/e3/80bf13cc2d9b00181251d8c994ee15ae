@@ -1,0 +1,456 @@
+package july23to31;
+
+import java.io.*;
+import java.util.*;
+
+public class Round501 {
+    InputStream is;
+    PrintWriter out;
+    String INPUT = "";
+    //boolean codechef=true;
+    boolean codechef=true;
+    
+    void solve()
+    {
+    	//int n=ni();
+    	for(int n=3;n<=10000;n++)
+    	{
+    		int[] arr=new int[n];
+        	for(int i=0;i<n;i++)
+        	{
+        		arr[i]=i+1;
+        	}
+        	int min=Integer.MAX_VALUE;
+        	int val=2;
+        	for(int i=2;i<=n;i++)
+        	{
+        		if(n%i==0)
+        		{
+        			if(min>n/i+i)
+        			{
+        				min=n/i+i;
+        				val=i;
+        			}
+        		}
+        		else if(min>n/i+1+i)
+    			{
+    				val=i;
+    				min=n/i+i+1;
+    			}
+        	}
+        	//System.out.println(val);
+        	int j=0;
+        	for(int i=0;i<n;i+=val)
+        	{
+        		if(i+val-1<n)
+        		{
+        			rev(arr,i,i+val-1);
+        			j=i+val;
+        		}
+        		//System.out.println(Arrays.toString(arr));
+        	}
+        	rev(arr,j,n-1);
+        	for(int i:arr)
+        	{
+        		//out.print(i+" ");
+        	}
+        	//out.println();
+        	//n = ni();
+    		int s = (int)Math.sqrt(n);
+    		int ct = 0;
+    		int[] a = new int[n];
+    		int last=n-1;
+    		for(int i = n/s;i >= 0;i--){
+    			for(j = 0;j < s && i*s+j < n;j++){
+    				a[ct] = i*s+j;
+    				if(arr[last--]!=i*s+j+1)
+    				{
+    					System.out.println(n);
+    					//System.out.println(A);
+    					return;
+    				}
+    				//out.print(i*s+j+1 + " ");
+    				ct++;
+    			}
+    		}
+    	}
+    	/*
+    	for(int i=9;i<=9;i++)
+    	{
+    		int[] arr=new int[i];
+    		for(int j=0;j<i;j++)
+    		{
+    			arr[j]=(j+1);
+    		}
+    		ans=Integer.MAX_VALUE;
+    		permute(arr,0,i-1);
+    		System.out.println(ans);
+    	}
+    	System.out.println(Arrays.toString(finArr));
+    	*/
+    }
+    
+    void rev(int[] arr,int l,int r)
+    {
+    	int sz=(r-l+1);
+    	for(int i=l;i<=(l+r)/2;i++)
+    	{
+    		swap(arr,i,r--);
+    	}
+    }
+    
+    void swap(int[] arr,int i1,int i2)
+    {
+    	int tmp=arr[i1];
+    	arr[i1]=arr[i2];
+    	arr[i2]=tmp;
+    }
+    static int ans;
+    
+    static int[] finArr;
+    
+    void permute(int[] arr, int l, int r)
+    {
+       int i;
+       if (l == r)
+       {
+    	   //System.out.println(Arrays.toString(arr));
+    	   int lis=lis(arr,arr.length),lds=lds(arr,arr.length);
+    	   //System.out.println(lis+" "+lds);
+    	   if(ans>(lis==0?1:lis)+(lds==0?1:lds))
+    	   {
+    		   ans=(lis==0?1:lis)+(lds==0?1:lds);
+    		   finArr=Arrays.copyOf(arr, arr.length);
+    	   }
+       }
+       else
+       {
+           for (i = l; i <= r; i++)
+           {
+              swap(arr,l,i);
+              permute(arr, l+1, r);
+              swap(arr,l,i);
+           }
+       }
+    }
+    
+    static int lds(int arr[], int n)
+    {
+        int lds[] = new int[n];
+        int i, j, max = 0;
+     
+        // Initialize LDS with 1 
+        // for all index. The minimum 
+        // LDS starting with any
+        // element is always 1
+        for (i = 0; i < n; i++)
+            lds[i] = 1;
+     
+        // Compute LDS from every 
+        // index in bottom up manner
+        for (i = 1; i < n; i++)
+            for (j = 0; j < i; j++)
+                if (arr[i] < arr[j] && 
+                             lds[i] < lds[j] + 1)
+                    lds[i] = lds[j] + 1;
+     
+        // Select the maximum 
+        // of all the LDS values
+        for (i = 0; i < n; i++)
+            if (max < lds[i])
+                max = lds[i];
+     
+        // returns the length
+        // of the LDS
+        return max;
+    }
+    
+    static int lis(int arr[],int n)
+    {
+          int lis[] = new int[n];
+          int i,j,max = 0;
+ 
+          /* Initialize LIS values for all indexes */
+           for ( i = 0; i < n; i++ )
+              lis[i] = 1;
+ 
+           /* Compute optimized LIS values in bottom up manner */
+           for ( i = 1; i < n; i++ )
+              for ( j = 0; j < i; j++ ) 
+                         if ( arr[i] > arr[j] && lis[i] < lis[j] + 1)
+                    lis[i] = lis[j] + 1;
+ 
+           /* Pick maximum of all LIS values */
+           for ( i = 0; i < n; i++ )
+              if ( max < lis[i] )
+                 max = lis[i];
+ 
+            return max;
+    }
+
+	public static long[] radixSort(long[] f){ return radixSort(f, f.length); }
+	public static long[] radixSort(long[] f, int n)
+	{
+		long[] to = new long[n];
+		{
+			int[] b = new int[65537];
+			for(int i = 0;i < n;i++)b[1+(int)(f[i]&0xffff)]++;
+			for(int i = 1;i <= 65536;i++)b[i]+=b[i-1];
+			for(int i = 0;i < n;i++)to[b[(int)(f[i]&0xffff)]++] = f[i];
+			long[] d = f; f = to;to = d;
+		}
+		{
+			int[] b = new int[65537];
+			for(int i = 0;i < n;i++)b[1+(int)(f[i]>>>16&0xffff)]++;
+			for(int i = 1;i <= 65536;i++)b[i]+=b[i-1];
+			for(int i = 0;i < n;i++)to[b[(int)(f[i]>>>16&0xffff)]++] = f[i];
+			long[] d = f; f = to;to = d;
+		}
+		{
+			int[] b = new int[65537];
+			for(int i = 0;i < n;i++)b[1+(int)(f[i]>>>32&0xffff)]++;
+			for(int i = 1;i <= 65536;i++)b[i]+=b[i-1];
+			for(int i = 0;i < n;i++)to[b[(int)(f[i]>>>32&0xffff)]++] = f[i];
+			long[] d = f; f = to;to = d;
+		}
+		{
+			int[] b = new int[65537];
+			for(int i = 0;i < n;i++)b[1+(int)(f[i]>>>48&0xffff)]++;
+			for(int i = 1;i <= 65536;i++)b[i]+=b[i-1];
+			for(int i = 0;i < n;i++)to[b[(int)(f[i]>>>48&0xffff)]++] = f[i];
+			long[] d = f; f = to;to = d;
+		}
+		return f;
+	}
+	
+	static class DSets
+	{
+		int[] p;
+		int[] r;
+		int[] s;
+		int size;
+		int max_component;
+		public DSets(int n)
+		{
+			s=new int[n+1];
+			r=new int[n+1];
+			p=new int[n+1];
+			for(int i=1;i<=n;i++)
+			{
+				r[i]=0;
+				p[i]=i;
+				s[i]=1;
+			}
+			this.size=n+1;
+		}
+		public int find(int x)
+		{
+			if(x != p[x]){
+	            p[x] = find(p[x]) ;
+	        }
+	        return p[x] ;
+		}
+		public boolean unionBySize(int x,int y)
+		{
+			int rx , ry ;
+	        rx = find(x) ;
+	        ry = find(y) ;
+	        if(rx != ry)
+	        {
+	            if(r[rx] < r[ry])
+	            {
+	                p[rx] = ry ;
+	                s[ry] += s[rx] ;
+	                max_component = Math.max(max_component,s[ry]) ;
+	            }
+	            else
+	            {
+	                p[ry] = rx ;
+	                s[rx] += s[ry] ;
+	                max_component = Math.max(max_component,s[rx]) ;
+	            }
+	            if(r[rx] == r[ry])
+	            {
+	                r[rx] ++;
+	            }
+	            return true ;
+	        }
+	        return false ;
+		}
+	}
+    
+    static class Pair
+    {
+        int a,b;
+        public Pair(int a,int b)
+        {
+            this.a=a;
+            this.b=b;
+        }
+    }
+    
+    static int bit[];
+    
+    static void add(int x,int d,int n)
+    {
+        for(int i=x;i<=n;i+=i&-i)bit[i]+=d;
+    }
+
+    static int query(int x)
+    {
+        int ret=0;
+        for(int i=x;i>0;i-=i&-i)
+        ret+=bit[i];
+        return ret;
+    }
+    
+    static long lcm(int a,int b)
+    {
+        long val=a;
+        val*=b;
+        return (val/gcd(a,b));
+    }
+    
+    static int gcd(int a,int b)
+    {
+        if(a==0)return b;
+        return gcd(b%a,a);
+    }
+    
+    static int pow(int a, int b, int p)
+    {
+        long ans = 1, base = a;
+        while (b!=0)
+        {
+            if ((b & 1)!=0)
+            {
+                ans *= base;
+                ans%= p;
+            }
+            base *= base;
+            base%= p;
+            b >>= 1;
+        }
+        return (int)ans;
+    }
+
+    static int inv(int x, int p)
+    {
+        return pow(x, p - 2, p);
+    }
+
+    
+    void run() throws Exception
+    {
+        if(codechef)oj=true;
+        is = oj ? System.in : new ByteArrayInputStream(INPUT.getBytes());
+        out = new PrintWriter(System.out);
+        
+        long s = System.currentTimeMillis();
+        solve();
+        out.flush();
+        tr(System.currentTimeMillis()-s+"ms");
+    }
+    
+    public static void main(String[] args) throws Exception {new Round501().run();}
+    
+    private byte[] inbuf = new byte[1024];
+    public int lenbuf = 0, ptrbuf = 0;
+    
+    private int readByte()
+    {
+        if(lenbuf == -1)throw new InputMismatchException();
+        if(ptrbuf >= lenbuf){
+            ptrbuf = 0;
+            try { lenbuf = is.read(inbuf); } catch (IOException e) { throw new InputMismatchException(); }
+            if(lenbuf <= 0)return -1;
+        }
+        return inbuf[ptrbuf++];
+    }
+    
+    private boolean isSpaceChar(int c) { return !(c >= 33 && c <= 126); }
+    private int skip() { int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
+    
+    private double nd() { return Double.parseDouble(ns()); }
+    private char nc() { return (char)skip(); }
+    
+    private String ns()
+    {
+        int b = skip();
+        StringBuilder sb = new StringBuilder();
+        while(!(isSpaceChar(b))){ // when nextLine, (isSpaceChar(b) && b != ' ')
+            sb.appendCodePoint(b);
+            b = readByte();
+        }
+        return sb.toString();
+    }
+    
+    private char[] ns(int n)
+    {
+        char[] buf = new char[n];
+        int b = skip(), p = 0;
+        while(p < n && !(isSpaceChar(b))){
+            buf[p++] = (char)b;
+            b = readByte();
+        }
+        return n == p ? buf : Arrays.copyOf(buf, p);
+    }
+    
+    private char[][] nm(int n, int m)
+    {
+        char[][] map = new char[n][];
+        for(int i = 0;i < n;i++)map[i] = ns(m);
+        return map;
+    }
+    
+    private int[] na(int n)
+    {
+        int[] a = new int[n];
+        for(int i = 0;i < n;i++)a[i] = ni();
+        return a;
+    }
+    
+    private int ni()
+    {
+        int num = 0, b;
+        boolean minus = false;
+        while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+        if(b == '-'){
+            minus = true;
+            b = readByte();
+        }
+        
+        while(true){
+            if(b >= '0' && b <= '9'){
+                num = num * 10 + (b - '0');
+            }else{
+                return minus ? -num : num;
+            }
+            b = readByte();
+        }
+    }
+    
+    private long nl()
+    {
+        long num = 0;
+        int b;
+        boolean minus = false;
+        while((b = readByte()) != -1 && !((b >= '0' && b <= '9') || b == '-'));
+        if(b == '-'){
+            minus = true;
+            b = readByte();
+        }
+        
+        while(true){
+            if(b >= '0' && b <= '9'){
+                num = num * 10 + (b - '0');
+            }else{
+                return minus ? -num : num;
+            }
+            b = readByte();
+        }
+    }
+    
+    private boolean oj = System.getProperty("ONLINE_JUDGE") != null;
+    private void tr(Object... o) { if(!oj)System.out.println(Arrays.deepToString(o)); }
+}

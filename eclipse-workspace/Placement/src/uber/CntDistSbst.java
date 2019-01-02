@@ -1,0 +1,119 @@
+package uber;
+
+import java.util.*;
+import java.io.*;
+
+public class CntDistSbst {
+
+	public static void main(String[] args)
+	{
+		Scanner in=new Scanner(System.in);
+		String txt=in.next();
+		int ans=count(txt,txt.length());
+		System.out.println(ans);
+	}
+	
+	static class Suffix
+	{
+		int ind;
+		int[] rank;
+		public Suffix()
+		{
+			rank=new int[2];
+		}
+	}
+
+	private static int count(String txt, int n) {
+		// TODO Auto-generated method stub
+		int[] suffArr = buildSuff(txt,n);
+		int[] lcp=kasai(txt,suffArr);
+		int res=n-suffArr[0];
+		for(int i=1;i<n;i++)
+		{
+			res+=(n-suffArr[i])-lcp[i-1];
+		}
+		res++;//for empty string
+		return res;
+	}
+
+	private static int[] kasai(String txt, int[] suffArr) {
+		// TODO Auto-generated method stub
+		int n=txt.length();
+		int[] ind=new int[n];
+		int[] lcp=new int[n];
+		for(int i=0;i<n;i++)
+		{
+			ind[suffArr[i]]=i;
+		}
+		int k=0;
+		for(int i=0;i<n;i++)
+		{
+			if(ind[i]==n-1)
+			{
+				k=0;
+				continue;
+			}
+			int j=suffArr[ind[i]+1];
+			
+			while(i+k<n && j+k<n && txt.charAt(i+k)==txt.charAt(j+k))k++;
+			lcp[ind[i]]=k;
+			if(k>0)k--;
+		}
+		return lcp;
+	}
+
+	private static int[] buildSuff(String txt, int n) 
+	{
+		// TODO Auto-generated method stub
+		Suffix[] suff=new Suffix[n];
+		for(int i=0;i<n;i++)
+		{
+			suff[i]=new Suffix();
+			suff[i].ind=i;
+			suff[i].rank[0]=txt.charAt(i)-'a';
+			suff[i].rank[1]=((i+1)<n)?(txt.charAt(i+1)-'a'):-1;
+		}
+		Comparator<Suffix> cmp=new Comparator<Suffix>() {
+			@Override
+			public int compare(Suffix s1, Suffix s2) {
+				// TODO Auto-generated method stub
+				if(s1.rank[0]==s2.rank[0])return s1.rank[1]-s2.rank[1];
+				return s1.rank[0]-s2.rank[0];
+			}};
+		Arrays.sort(suff,cmp);
+		int[] ind=new int[n];
+		for(int k=4;k<2*n;k*=2)
+		{
+			int rank=0;
+			int prevRank=suff[0].rank[0];
+			suff[0].rank[0]=0;
+			ind[suff[0].ind]=0;
+			for(int i=1;i<n;i++)
+			{
+				if(suff[i].rank[0]==prevRank && suff[i].rank[1]==suff[i-1].rank[1])
+				{
+					prevRank=suff[i].rank[0];
+					suff[i].rank[0]=rank;
+				}
+				else
+				{
+					prevRank=suff[i].rank[0];
+					suff[i].rank[0]=++rank;
+				}
+				ind[suff[i].ind]=i;
+			}
+			for(int i=1;i<n;i++)
+			{
+				int nextInd=suff[i].ind+k/2;
+				suff[i].rank[1]=(nextInd<n)?suff[ind[nextInd]].rank[0]:-1;
+			}
+			Arrays.sort(suff, cmp);
+		}
+		int[] suffArr=new int[n];
+		for(int i=0;i<n;i++)
+		{
+			suffArr[i]=suff[i].ind;
+		}
+		return suffArr;
+	}
+}

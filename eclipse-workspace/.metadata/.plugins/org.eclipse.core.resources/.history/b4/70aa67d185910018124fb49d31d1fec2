@@ -1,0 +1,8 @@
+package july23to31;
+
+public class Simple {
+	public static void main(String[] args) {
+		System.out.println("Hello");
+	}
+
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+		<item value="C:\Users\DEEPAK\Documents\Projects\UCSD-Unfolding-Maps-master"/>
+		<item value="C:\Users\DEEPAK\Documents\Projects\MOOCTextEditor-master"/>
+		<item value="C:\Users\DEEPAK\Documents\Projects\UCSDGraphs-master"/>
+	</list>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="381" key="DIALOG_X_ORIGIN"/>
+		<item value="205" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>
